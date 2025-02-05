@@ -20,3 +20,14 @@ red = (255, 0, 0)
 font1 = pygame.font.SysFont("Times New Roman", 24, bold = True)
 font2 = pygame.font.SysFont("Times New Roman", 20)
 font3 = pygame.font.SysFont("Times New Roman", 30, bold = True)
+
+#Вопросы и ответы
+class Question:
+    def init(self, text, answers, correct):
+        self.text = text
+        self.answers = answers
+        self.correct = correct
+questions = [
+    
+
+]
