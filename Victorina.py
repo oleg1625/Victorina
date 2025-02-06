@@ -141,7 +141,59 @@ questions = [
         ['Не изменила', ' Уменьшила их роль', 'Расширила их права и возможности'],
         2
     )
-
-
-
 ]
+
+class QuizGame:
+    def init(self):
+        self.questions = questinos
+        self.current_question = 0
+        self.score = 0
+        self.running = True
+
+    def draw_question(self):
+        question = self.question[self.current_question]
+
+        #Отрисовка текста вопроса
+        text = font1.render(question.text, True, black)
+        text_rect = text.get_rect(center=(width//2, 100))
+        screen.blit(text, text_rect)
+
+        #Отрисовка кнопок с ответами
+        button_hright =  50
+        button_width = 600
+        spacing = 20
+        start_y = 200
+
+        for i, answer in enumerate(question.answers):
+            rect = pygame.Rect(
+                (width - button_width)//2,
+                start_y + i*(button_height + spacing),
+                button_width,
+                button_height
+            )
+
+            pygame.draw.rect(screen, gray, rect)
+            text = font2.render(answer, True, black)
+            text_rect = text.get_rect(center = rect.center)
+            screen.bilt(text, text_rect)
+    def chetck_answer(self, pos):
+        question = self.questions[self.current_question]
+        button_width = 600
+        button_height = 50
+        start_y = 200
+        spacing = 20
+
+        for i in range(len(question.answers)):
+            rect = pygame.Rect(
+                (width - button_width)//2,
+                start_y + i*(button_height + spacing),
+                button_width,
+                button_height
+            )
+            if rect.collidepoint(pos):
+                if i == question.correct:
+                    self.score += 1
+                self.current_question +=1
+                if self.current_question >= len(self.questions):
+                    self.show_final_score()
+                return
