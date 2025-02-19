@@ -24,7 +24,7 @@ font3 = pygame.font.SysFont("Times New Roman", 30, bold=True)
 
 # Вопросы и ответы
 class Question:
-    def init(self, text, answers, correct):
+    def __init__(self, text, answers, correct):
         self.text = text
         self.answers = answers
         self.correct = correct
@@ -144,14 +144,14 @@ questions = [
 ]
 
 class QuizGame:
-    def init(self):
-        self.questions = questinos
+    def __init__(self):
+        self.questions = questions
         self.current_question = 0
         self.score = 0
         self.running = True
 
     def draw_question(self):
-        question = self.question[self.current_question]
+        question = self.questions[self.current_question]
 
         #Отрисовка текста вопроса
         text = font1.render(question.text, True, black)
@@ -159,7 +159,7 @@ class QuizGame:
         screen.blit(text, text_rect)
 
         #Отрисовка кнопок с ответами
-        button_hright =  50
+        button_height =  50
         button_width = 600
         spacing = 20
         start_y = 200
@@ -175,8 +175,8 @@ class QuizGame:
             pygame.draw.rect(screen, gray, rect)
             text = font2.render(answer, True, black)
             text_rect = text.get_rect(center = rect.center)
-            screen.bilt(text, text_rect)
-    def chetck_answer(self, pos):
+            screen.blit(text, text_rect)
+    def check_answer(self, pos):
         question = self.questions[self.current_question]
         button_width = 600
         button_height = 50
@@ -197,3 +197,37 @@ class QuizGame:
                 if self.current_question >= len(self.questions):
                     self.show_final_score()
                 return
+    def show_final_score(self):
+        screen.fill(white)
+        text = font3.render(f"Паравильных ответов: {self.score} из {len(questions)}", True, green)
+        text_rect = text.get_rect(center = (width//2 , height//2))
+        screen.blit(text, text_rect)
+        pygame.display.update()
+        pygame.time.wait(3000)
+        self.running =  False
+
+    def run(self):
+        while self.running:
+            screen.fill(white)
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    self.check_answer(event.pos)
+
+                if self.current_question < len(self.questions):
+                    self.draw_question()
+                else:
+                    self.show_final_score()
+
+                #Отображение счёта
+                score_text = font3.render(f"Счёт: {self.score}", True, black)
+                screen.blit(score_text, (20, 20))
+
+                pygame.display.update()
+if __name__ == "__main__":
+    game = QuizGame()
+    game.run()
+    pygame.quit()
