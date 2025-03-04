@@ -8,7 +8,11 @@ pygame.init()
 # Константы
 width = 1280
 height = 720
-LEADERBOARD_FILE = "Draftleaderboard.txt"  # Файл для хранения результатов
+LEADERBOARD_FILE = "leaderboard.txt"  # Файл для хранения результатов
+
+# Настройка окна
+screen = pygame.display.set_mode((width, height))
+pygame.display.set_caption('Викторина "Женщины Великой Отечественной войны"')
 
 # Цвета
 white = (255, 255, 255)
@@ -16,20 +20,12 @@ black = (0, 0, 0)
 gray = (200, 200, 200)
 green = (0, 255, 0)
 red = (255, 0, 0)
-yellow = (255, 255, 0)
 
 # Шрифты
 font1 = pygame.font.SysFont("Times New Roman", 24, bold=True)
 font2 = pygame.font.SysFont("Times New Roman", 20)
 font3 = pygame.font.SysFont("Times New Roman", 30, bold=True)
 
-# Загрузка фонвого изображения
-try:
-    background = pygame.image.load("photo.jpg")
-    background = pygame.transform.scale(background, (width, height))
-except Exception as e:
-    print(f"Ошибка загрузки фона: {e}")
-    sys.exit()
 
 # Класс для обработки текстового ввода (регистрация)
 class TextInput:
@@ -195,41 +191,32 @@ class QuizGame:
         self.score = 0
         self.running = True
 
-    def draw_question(self, screen):
-        # Рисуем фон
-        screen.blit(background, (0, 0))
-
+    def draw_question(self):
         question = self.questions[self.current_question]
 
-        # Полупрозрачная подложка для текста
-        text_bg = pygame.Surface((width - 40, 100), pygame.SRCALPHA)
-        text_bg.fill(gray)
-        screen.blit(text_bg, (20, 50))
+        #Отрисовка текста вопроса
+        text = font1.render(question.text, True, black)
+        text_rect = text.get_rect(center=(width//2, 100))
+        screen.blit(text, text_rect)
 
-        # Текст вопроса
-        text = font1.render(question.text, True, yellow)
-        screen.blit(text, (50, 70))
-
-        # Кнопки ответов
-        button_height = 50
+        #Отрисовка кнопок с ответами
+        button_height =  50
         button_width = 600
+        spacing = 20
         start_y = 200
 
         for i, answer in enumerate(question.answers):
             rect = pygame.Rect(
-                (width - button_width) // 2,
-                start_y + i * (button_height + 20),
+                (width - button_width)//2,
+                start_y + i*(button_height + spacing),
                 button_width,
                 button_height
             )
-            # Подложка для кнопки
-            btn_bg = pygame.Surface((button_width, button_height), pygame.SRCALPHA)
-            btn_bg.fill((100, 100, 100, 128))
-            screen.blit(btn_bg, rect.topleft)
 
-            text = font2.render(answer, True, yellow)
-            screen.blit(text, (rect.x + 20, rect.y + 15))
-
+            pygame.draw.rect(screen, gray, rect)
+            text = font2.render(answer, True, black)
+            text_rect = text.get_rect(center = rect.center)
+            screen.blit(text, text_rect)
     def check_answer(self, pos):
         question = self.questions[self.current_question]
         button_width = 600
@@ -239,27 +226,26 @@ class QuizGame:
 
         for i in range(len(question.answers)):
             rect = pygame.Rect(
-                (width - button_width) // 2,
-                start_y + i * (button_height + spacing),
+                (width - button_width)//2,
+                start_y + i*(button_height + spacing),
                 button_width,
                 button_height
             )
             if rect.collidepoint(pos):
                 if i == question.correct:
                     self.score += 1
-                self.current_question += 1
+                self.current_question +=1
                 if self.current_question >= len(self.questions):
                     self.show_final_score()
                 return
-
     def show_final_score(self):
         screen.fill(white)
         text = font3.render(f"Паравильных ответов: {self.score} из {len(questions)}", True, green)
-        text_rect = text.get_rect(center=(width // 2, height // 2))
+        text_rect = text.get_rect(center = (width//2 , height//2))
         screen.blit(text, text_rect)
         pygame.display.update()
         pygame.time.wait(3000)
-        self.running = False
+        self.running =  False
 
     def run(self):
         while self.running:
@@ -277,84 +263,71 @@ class QuizGame:
                 else:
                     self.show_final_score()
 
-                # Отображение счёта
+                #Отображение счёта
                 score_text = font3.render(f"Счёт: {self.score}", True, black)
                 screen.blit(score_text, (20, 20))
 
                 pygame.display.update()
 
-    # Функции для работы с таблицей лидеров
-    def save_to_leaderboard(username, score):
-        with open(LEADERBOARD_FILE, 'a') as f:
-            f.write(f"{username},{score}\n")
+def main():
 
-    def load_leaderboard():
-        if not os.path.exists(LEADERBOARD_FILE):
-            return []
-        scores = []
-        with open(LEADERBOARD_FILE, 'r') as f:
-            for line in f:
-                username, score = line.strip().split(',')
-                scores.append((username, int(score)))
-        return sorted(scores, key=lambda x: x[1], reverse=True)[:5]
+    # Этап 1: Регистрация пользователя
+    username = ""
+    text_input = TextInput(width // 2 - 100, height // 2 - 25, 200, 50)
+    done = False
 
-    def main():
-        screen = pygame.display.set_mode((WIDTH, HEIGHT))
-        pygame.display.set_caption("Викторина ВОВ с фоном")
+    while not done:
+        screen.fill(white)
 
-        # Регистрация пользователя
-        username = ""
-        text_input = TextInput(WIDTH // 2 - 100, HEIGHT // 2 - 25, 200, 50)
-        done = False
+        # Отрисовка заголовка
+        title = font1.render("Введите ваше имя:", True, black)
+        screen.blit(title, (width // 2 - title.get_width() // 2, 100))
 
-        while not done:
-            # Рисуем фон
-            screen.blit(background, (0, 0))
-
-            # Отрисовка элементов регистрации
-            title = title_font.render("Введите ваше имя:", True, TEXT_COLOR)
-            screen.blit(title, (WIDTH // 2 - title.get_width() // 2, 100))
-
-            pygame.draw.rect(screen, (255, 255, 255), text_input.rect)
-            text_surface = font.render(text_input.text, True, BLACK)
-            screen.blit(text_surface, (text_input.rect.x + 5, text_input.rect.y + 5))
-
-            pygame.display.flip()
-
-            # Обработка событий
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-                text_input.handle_event(event)
-
-                if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
-                    if len(text_input.text) > 0:
-                        username = text_input.text
-                        done = True
-
-        # Запуск викторины
-        game = QuizGame()
-        game.run()
-
-        # Сохранение результата
-        save_to_leaderboard(username, game.score)
-        leaderboard = load_leaderboard()
-
-        # Отображение таблицы лидеров
-        screen.blit(background, (0, 0))
-        title = title_font.render("Таблица лидеров", True, TEXT_COLOR)
-        screen.blit(title, (WIDTH // 2 - title.get_width() // 2, 50))
-
-        y = 150
-        for i, (name, score) in enumerate(leaderboard):
-            text = font.render(f"{i + 1}. {name}: {score} правильных ответов", True, TEXT_COLOR)
-            screen.blit(text, (WIDTH // 2 - text.get_width() // 2, y))
-            y += 50
+        # Отрисовка поля ввода
+        pygame.draw.rect(screen, gray, text_input.rect)
+        text_surface = font2.render(text_input.text, True, black)
+        screen.blit(text_surface, (text_input.rect.x + 5, text_input.rect.y + 5))
 
         pygame.display.flip()
-        pygame.time.wait(30000)
-        pygame.quit()
 
-    if __name__ == "__main__":
-        main()
+        # Обработка событий
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            text_input.handle_event(event)
+
+            # Проверка на завершение ввода
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+                if len(text_input.text) > 0:
+                    username = text_input.text
+                    done = True
+
+    # Этап 2: Запуск викторины
+    game = QuizGame()
+    game.run()
+
+    # Этап 3: Сохранение результата и показ таблицы лидеров
+    save_to_leaderboard(username, game.score)
+    leaderboard = load_leaderboard()
+
+    # Отрисовка таблицы лидеров
+    screen.fill(white)
+    title = font1.render("Таблица лидеров", True, black)
+    screen.blit(title, (width // 2 - title.get_width() // 2, 50))
+
+    y = 150
+    for i, (name, score) in enumerate(leaderboard):
+        text = font2.render(f"{i + 1}. {name}: {score} правильных ответов", True, black)
+        screen.blit(text, (width // 2 - text.get_width() // 2, y))
+        y += 50
+
+    pygame.display.flip()
+
+    # Ожидание перед закрытием
+    pygame.time.wait(30000)
+    pygame.quit()
+
+
+if __name__ == "__main__":
+    main()
