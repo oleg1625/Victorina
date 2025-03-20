@@ -8,10 +8,10 @@ pygame.init()
 # Константы
 width = 1280
 height = 720
-LEADERBOARD_FILE = "leaderboard.txt"  # Файл для хранения результатов
+LEADERBOARD_FILE = "leaderboardfinal.txt"  # Файл для хранения результатов
 
 # Фон
-BACKGROUND_IMAGE = pygame.image.load("background.jpg")
+BACKGROUND_IMAGE = pygame.image.load("photo.jpg")
 BACKGROUND_IMAGE = pygame.transform.scale(BACKGROUND_IMAGE, (width, height))
 
 # Настройка окна
@@ -197,6 +197,10 @@ class QuizGame:
         self.running = True
 
     def draw_question(self):
+        screen.blit(BACKGROUND_IMAGE, (0, 0))
+        overlay = pygame.Surface((width, height), pygame.SRCALPHA)
+        overlay.fill((255, 255, 255, 128))  # Полупрозрачный белый
+        screen.blit(overlay, (0, 0))
         question = self.questions[self.current_question]
 
         #Отрисовка текста вопроса
@@ -244,7 +248,10 @@ class QuizGame:
                     self.show_final_score()
                 return
     def show_final_score(self):
-        screen.fill(white)
+        screen.blit(BACKGROUND_IMAGE, (0, 0))
+        overlay = pygame.Surface((width, height), pygame.SRCALPHA)
+        overlay.fill((255, 255, 255, 200))
+        screen.blit(overlay, (0, 0))
         text = font3.render(f"Паравильных ответов: {self.score} из {len(questions)}", True, green)
         text_rect = text.get_rect(center = (width//2 , height//2))
         screen.blit(text, text_rect)
@@ -254,7 +261,7 @@ class QuizGame:
 
     def run(self):
         while self.running:
-            screen.fill(white)
+            screen.blit(BACKGROUND_IMAGE, (0, 0))
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -282,7 +289,10 @@ def main():
     done = False
 
     while not done:
-        screen.fill(white)
+        screen.blit(BACKGROUND_IMAGE, (0, 0))
+        overlay = pygame.Surface((width, height), pygame.SRCALPHA)
+        overlay.fill((255, 255, 255, 200))
+        screen.blit(overlay, (0, 0))
 
         # Отрисовка заголовка
         title = font1.render("Введите ваше имя:", True, black)
@@ -317,7 +327,10 @@ def main():
     leaderboard = load_leaderboard()
 
     # Отрисовка таблицы лидеров
-    screen.fill(white)
+    screen.blit(BACKGROUND_IMAGE, (0, 0))
+    overlay = pygame.Surface((width, height), pygame.SRCALPHA)
+    overlay.fill((255, 255, 255, 200))
+    screen.blit(overlay, (0, 0))
     title = font1.render("Таблица лидеров", True, black)
     screen.blit(title, (width // 2 - title.get_width() // 2, 50))
 
