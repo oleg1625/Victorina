@@ -10,10 +10,6 @@ width = 1280
 height = 720
 LEADERBOARD_FILE = "leaderboard.txt"  # Файл для хранения результатов
 
-# Фон
-BACKGROUND_IMAGE = pygame.image.load("background.jpg")
-BACKGROUND_IMAGE = pygame.transform.scale(BACKGROUND_IMAGE, (width, height))
-
 # Настройка окна
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption('Викторина "Женщины Великой Отечественной войны"')
