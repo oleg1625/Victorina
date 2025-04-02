@@ -42,6 +42,10 @@
 ### **Таблица лидеров:**
 ![Victorina3.png](https://www.ibb.org.ru/images/2025/04/02/Victorina3.png)
 
+## 👥 Разработчики
+
+- [oleg1625 SadDeadinsider](https://github.com/oleg1625) - Основной разработчик
+- [VanlyCrazy](https://github.com/VanlyCrazy) - Дизайнер/Тестировщик
 
 # 🛠 Установка и запуск
 
