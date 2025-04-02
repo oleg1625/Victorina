@@ -34,13 +34,13 @@
 ```
 ## 📸 Скриншоты
 ### **Регистрация:**
-![Регистрация](https://www.ibb.org.ru/1/N9ajxP)
+![Victorina1.png](https://www.ibb.org.ru/images/2025/04/02/Victorina1f1143a6927e6beab.png)
 
 ### **Игровой процесс:**
-![Игровой процесс](https://www.ibb.org.ru/1/N9ajxP)
+![Victorina2.png](https://www.ibb.org.ru/images/2025/04/02/Victorina22074a54d21059ff5.png)
 
 ### **Таблица лидеров:**
-![Таблица лидеров](https://www.ibb.org.ru/1/N9ifXV)
+![Victorina3.png](https://www.ibb.org.ru/images/2025/04/02/Victorina3.png)
 
 
 # 🛠 Установка и запуск
